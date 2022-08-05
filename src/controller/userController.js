@@ -348,6 +348,7 @@ const updateUser = async (req, res) => {
       });
 
     let data = req.body;
+    let files = req.files;
 
     if (!validator.isValidRequest(data) && !files) {
       return res
@@ -355,16 +356,28 @@ const updateUser = async (req, res) => {
         .send({ status: false, message: "Nothing to update" });
     }
 
-    let { fname, lname, email, phone, password, address } = data;
+    let { fname, lname, email, phone, password, address} = data;
     let updatedData = {};
 
-    let files = req.files;
-    if (files && files.length > 0) {
+    if (Object.keys(data).includes("profileImage")) {
+      if (files.length == 0) {
+        return res.status(400).send({
+          status: false,
+          message: "There is no file to update",
+        });
+      }
+    }
+
+    if(req.files.length){
+    if (files.length > 0 &&  validator.validFormat(files[0].originalname) ) {
       let uploadFileUrl = await aws_config.uploadFile(files[0]);
       updatedData.profileImage = uploadFileUrl;
     } else {
-      updatedData.profileImage = profile.profileImage;
+      return res
+      .status(400)
+      .send({ status: false, message: "Profile Image can not be updated" });
     }
+  }
 
     if (fname) {
       if (!validator.isValidValue(fname)) {
@@ -448,24 +461,36 @@ const updateUser = async (req, res) => {
       updatedData.password = password;
     }
 
-    if (typeof address != "object") {
-      return res.status(400).send({
-        status: false,
-        message: "address should be a  valid object",
-      });
-    }
+console.log(address,typeof address)
 
+if(address){
+    if(!validator.isValidValue(address) || Number(address))
+      return res.status(400).send({status:false,message:"Invalid address"})
+
+    
+      if (!address.shipping || !address.billing) {
+        return res.status(400).send({
+          status: false,
+          message: "shipping or billing address required",
+        });
+      }
+  
+    }
     if (address) {
       let addr = JSON.parse(address);
+      updatedData.address={}
+
       if (addr.shipping) {
         let { street, city, pincode } = addr.shipping;
+        updatedData.address.shipping={}
 
         if (street) {
           if(!validator.isValidValue(street))
             return res.status(400).send({status:false,message:"Invalid shipping street"})
-          updatedData.address.shipping.street = street
+          updatedData["address"]["shipping"]["street"] = street
+         
         }
-
+        console.log(updatedData["address"]["shipping"]["street"])
         if (city) {
           if(!validator.isValidValue(city))
             return res.status(400).send({status:false,message:"Invalid shipping city"})
@@ -480,6 +505,7 @@ const updateUser = async (req, res) => {
       }
 
       if (addr.billing) {
+        updatedData.address.billing={}
         let { street, city, pincode } = addr.billing;
 
         if (street) {

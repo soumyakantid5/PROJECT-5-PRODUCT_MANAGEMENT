@@ -207,7 +207,7 @@ const getProductsByFilters = async (req, res) => {
           .status(400)
           .send({ status: false, message: "Enter a valid size" });
       } else {
-        filterData.availableSizes = size;
+        filterData.availableSizes = size.toUpperCase();
       }
     }
 
@@ -306,21 +306,12 @@ const updateProduct = async (req, res) => {
     let files = req.files;
 
 
-
     if (!validator.isValidRequest(data) && !req.files) {
       return res
         .status(400)
         .send({ status: false, message: "Specify Parameters to Update" });
     }
 
-    if (Object.keys(data).includes("productImage")) {
-      if (files.length == 0) {
-        return res.status(400).send({
-          status: false,
-          message: "There is no file to update",
-        });
-      }
-    }
 
     if (Object.keys(data).includes("title")) {
       if (!validator.isValidValue(data.title)) {
@@ -387,9 +378,9 @@ const updateProduct = async (req, res) => {
         }
       }
 
-      
+  
       if (Object.keys(data).includes("isDeleted")) {
-        if (isDeleted!=false) {
+        if (data.isDeleted!="false") {
           return res.status(400).send({
             status: false,
             message: "isDeleted must be false",
@@ -399,20 +390,21 @@ const updateProduct = async (req, res) => {
 
 
       if (Object.keys(data).includes("currencyFormat")) {
-        if (currencyFormat!="INR") {
+        if (data.currencyFormat!="INR") {
           return res.status(400).send({
             status: false,
             message: "currency Format must be INR",
           });
         }
       }
+      
 
 
       if (Object.keys(data).includes("currencyId")) {
-        if (currencyId!="") {
+        if (data.currencyId!="₹") {
           return res.status(400).send({
             status: false,
-            message: "currencyId must be ",
+            message: "currencyId must be ₹",
           });
         }
       }
@@ -442,16 +434,36 @@ const updateProduct = async (req, res) => {
       }
 
       if (Array.isArray(sizesArray)) {
+        // delete data.availableSizes
+        // data["$set"]={}
+        //data["$set"]["availableSizes"] = [...new Set(sizesArray)];
         data["availableSizes"] = [...new Set(sizesArray)];
       }
     }
 
+   
 
-
-    if (files.length > 0) {
-      data.productImage = await aws_config.uploadFile(files[0]);
+    if (Object.keys(data).includes("productImage")) {
+      if (files.length == 0) {
+        return res.status(400).send({
+          status: false,
+          message: "There is no file to update",
+        });
+      }
+      
     }
 
+    if(req.files.length){
+      if (files.length > 0 &&  validator.validFormat(files[0].originalname) ) {
+        let uploadFileUrl = await aws_config.uploadFile(files[0]);
+        data["productImage"] = uploadFileUrl;
+        console.log(data.productImage)
+      } else {
+        return res
+        .status(400)
+        .send({ status: false, message: "Product Image can not be updated" });
+      }
+    }
 
 
 
