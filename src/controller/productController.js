@@ -55,7 +55,9 @@ const createProduct = async (req, res) => {
         .send({ status: false, message: "description is required" });
     }
 
-    if(!validator.validDesc(description)) return res.status(400).send({status: false, message: "The description may contain letters and numbers, not only numbers"})
+    if(!isNaN(description)) {
+      return res.status(400).send({status: false, message: "The description must not contain only numbers"})
+    }
 
 
     
@@ -81,7 +83,7 @@ const createProduct = async (req, res) => {
   else
     data.currencyId = "INR"
 
-console.log(data.currencyId)
+
     if (currencyFormat) {
       if (currencyFormat !== "₹") {
         return res
@@ -358,7 +360,7 @@ const updateProduct = async (req, res) => {
     }
 
     if (Object.keys(data).includes("description")) {
-      if (!validator.isValidValue(data.description) || validator.isValidDesc(data.description)) {
+      if (!validator.isValidValue(data.description) || !isNaN(data.description)) {
         return res
           .status(400)
           .send({ status: false, message: "description is not valid" });

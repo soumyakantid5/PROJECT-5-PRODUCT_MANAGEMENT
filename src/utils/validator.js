@@ -37,13 +37,9 @@ const validFormat = function(value){
   return /\.(gif|jpe?g|tiff?|png|webp|bmp)$/i.test(value)
 }
 
-const validDesc = function(value){
- return /^\d*[a-zA-Z][a-zA-Z\d\s.]*$/.test(description)
-}
-
 const validStatus = function(value){
   return ["pending", "completed", "cancelled"].indexOf(value) !== -1;
 }
 
 
-module.exports={isValidRequest, isValidValue ,isValidNumber , isValidObjectId, isValidName, isValidEmail, isValidPhone, validFormat,validDesc,validStatus}
+module.exports={isValidRequest, isValidValue ,isValidNumber , isValidObjectId, isValidName, isValidEmail, isValidPhone, validFormat,validStatus}
