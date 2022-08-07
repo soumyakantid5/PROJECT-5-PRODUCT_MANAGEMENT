@@ -81,7 +81,7 @@ const createOrder = async  (req, res) => {
         return res.status(201).send({ status: true, message: "Order placed successfully.", data: createOrder });
 
     } catch (err) {
-        res.status(500).send({ status: false, msg: err.message })
+        res.status(500).send({ status: false, message: err.message })
     }
 }
 
@@ -145,7 +145,7 @@ const updateOrder = async (req, res) => {
         }
 
     } catch (err) {
-        res.status(500).send({ status: false, msg: err.message })
+        res.status(500).send({ status: false, message: err.message })
     }
 }
 

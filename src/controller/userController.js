@@ -461,7 +461,9 @@ const updateUser = async (req, res) => {
       updatedData.password = password;
     }
 
-
+    let validateStreet = /^[a-zA-Z0-9]/;
+    let validateCity = /^[a-zA-Z0-9]/;
+    let validatePincode = /^[1-9]{1}[0-9]{2}\s{0,1}[0-9]{3}$/;
 
     if (Object.keys(data).includes("address")) {
       let addr = JSON.parse(address)
@@ -476,19 +478,19 @@ const updateUser = async (req, res) => {
           const { street, city, pincode } = addr.shipping;
 
           if (street) {
-            if (!validator.isValidValue(street))
+            if (!validator.isValidValue(street) || !validateStreet.test(street))
               return res.status(400).send({ status: false, message: "Invalid shipping street" });
             profile.address.shipping.street = street;
           }
 
           if (city) {
-            if (!validator.isValidValue(city))
+            if (!validator.isValidValue(city) || !validateCity.test(city))
               return res.status(400).send({ status: false, message: "Invalid shipping city" });
               profile.address.shipping.city = city;
           }
 
           if (pincode) {
-            if (!validator.isValidValue(pincode))
+            if (!validator.isValidValue(pincode) || !validatePincode.test(pincode))
               return res.status(400).send({ status: false, message: "Invalid shipping pincode " });
               profile.address.shipping.pincode = pincode;
           }
@@ -499,19 +501,19 @@ const updateUser = async (req, res) => {
           const { street, city, pincode } = addr.billing;
 
           if (street) {
-            if (!validator.isValidValue(street))
+            if (!validator.isValidValue(street) || !validateStreet.test(street))
               return res.status(400).send({ status: false, message: "Invalid billing street" });
               profile.address.billing.street = street;
           }
 
           if (city) {
-            if (!validator.isValidValue(city))
+            if (!validator.isValidValue(city) || !validateCity.test(city))
               return res.status(400).send({ status: false, message: "Invalid billing city" });
               profile.address.billing.city = city;
           }
 
           if (pincode) {
-            if (!validator.isValidValue(pincode))
+            if (!validator.isValidValue(pincode) || !validatePincode.test(pincode))
               return res.status(400).send({ status: false, message: "Invalid billing pincode" });
               profile.address.billing.pincode = pincode;
           }
