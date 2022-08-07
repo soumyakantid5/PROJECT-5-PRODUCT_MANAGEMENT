@@ -274,7 +274,7 @@ let login = async (req, res) => {
 
     let date = Date.now();
     let createTime = Math.floor(date / 1000);
-    let expTime = createTime + 3000;
+    let expTime = createTime + 30000;
 
     let token = jwt.sign(
       {
@@ -356,7 +356,7 @@ const updateUser = async (req, res) => {
         .send({ status: false, message: "Nothing to update" });
     }
 
-    let { fname, lname, email, phone, password, address} = data;
+    let { fname, lname, email, phone, password,} = data;
     let updatedData = {};
 
     if (Object.keys(data).includes("profileImage")) {

@@ -198,18 +198,40 @@ const getProductById = async (req, res) => {
 const getProductsByFilters = async (req, res) => {
   try {
     let data = req.query;
-    const { size, title, priceGreaterThan, priceLessThan, priceSort } = data;
+    let { size, title, priceGreaterThan, priceLessThan, priceSort } = data;
     const filterData = { isDeleted: false };
 
-    if (data.hasOwnProperty("size")) {
+
+    if (size) {
+      let allowedSizes = ["S", "XS", "M", "X", "L", "XXL", "XL"];
+
       if (!validator.isValidValue(size)) {
         return res
           .status(400)
           .send({ status: false, message: "Enter a valid size" });
-      } else {
-        filterData.availableSizes = size.toUpperCase();
       }
+
+      size = size.toUpperCase();
+
+      let check = true;
+      let sizes = size
+        .trim()
+        .split(",")
+        .map((e) => e.trim());
+
+      sizes.map((e) => {
+        if (!allowedSizes.includes(e)) return (check = false);
+      });
+      if (!check)
+        return res.status(400).send({
+          status: false,
+          message: "Sizes can only be S, XS, M, X, L, XL, XXL",
+        });
+
+      filterData.availableSizes = { $in: sizes };
     }
+
+
 
     if (data.hasOwnProperty("title")) {
       if (!validator.isValidValue(title)) {
