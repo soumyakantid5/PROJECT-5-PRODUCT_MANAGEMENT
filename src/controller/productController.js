@@ -344,6 +344,17 @@ const updateProduct = async (req, res) => {
     }
 
 
+
+    const getFilter = Object.keys(data)
+    if (getFilter.length) {
+      for (let value of getFilter) {
+        if (["title", "description","price","currencyId","currencyFormat","isFreeShipping","productImage","style","availableSizes","installments"].indexOf(value) == -1)
+          return res.status(400).send({ status: false, message: `You can't filter Using '${value}' ` })
+      }
+    }
+
+
+
     if (Object.keys(data).includes("title")) {
       if (!validator.isValidValue(data.title)) {
         return res
