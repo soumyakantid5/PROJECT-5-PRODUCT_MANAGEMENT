@@ -203,6 +203,13 @@ const getProductsByFilters = async (req, res) => {
     let { size, title, priceGreaterThan, priceLessThan, priceSort } = data;
     const filterData = { isDeleted: false };
 
+    const getFilter = Object.keys(data)
+    if (getFilter.length) {
+      for (let value of getFilter) {
+        if (['size', 'title', 'priceGreaterThan', 'priceLessThan', 'priceSort'].indexOf(value) == -1)
+          return res.status(400).send({ status: false, message: `You can't filter Using '${value}' ` })
+      }
+    }
 
     if (size) {
       let allowedSizes = ["S", "XS", "M", "X", "L", "XXL", "XL"];
@@ -481,7 +488,7 @@ const updateProduct = async (req, res) => {
       if (files.length > 0 &&  validator.validFormat(files[0].originalname) ) {
         let uploadFileUrl = await aws_config.uploadFile(files[0]);
         data["productImage"] = uploadFileUrl;
-        console.log(data.productImage)
+      
       } else {
         return res
         .status(400)
@@ -489,7 +496,7 @@ const updateProduct = async (req, res) => {
       }
     }
 
-
+console.log(data)
 
     let updateData = await productModel.findOneAndUpdate({ _id: productId, isDeleted: false },data,{ new: true });
 

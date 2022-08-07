@@ -356,7 +356,7 @@ const updateUser = async (req, res) => {
         .send({ status: false, message: "Nothing to update" });
     }
 
-    let { fname, lname, email, phone, password,} = data;
+    let { fname, lname, email, phone, password,address} = data;
     let updatedData = {};
 
     if (Object.keys(data).includes("profileImage")) {
@@ -461,72 +461,63 @@ const updateUser = async (req, res) => {
       updatedData.password = password;
     }
 
-console.log(address,typeof address)
 
-if(address){
-    if(!validator.isValidValue(address) || Number(address))
-      return res.status(400).send({status:false,message:"Invalid address"})
 
-    
-      if (!address.shipping || !address.billing) {
-        return res.status(400).send({
-          status: false,
-          message: "shipping or billing address required",
-        });
+    if (Object.keys(data).includes("address")) {
+      let addr = JSON.parse(address)
+     
+      if (addr) {
+
+        if (typeof addr !== "object" || Array.isArray(addr) || Object.keys(addr).length == 0)
+          return res.status(400).send({ status: false, message: "Address not in Valid Object Format..." });
+
+
+        if (addr.shipping) {
+          const { street, city, pincode } = addr.shipping;
+
+          if (street) {
+            if (!validator.isValidValue(street))
+              return res.status(400).send({ status: false, message: "Invalid shipping street" });
+            profile.address.shipping.street = street;
+          }
+
+          if (city) {
+            if (!validator.isValidValue(city))
+              return res.status(400).send({ status: false, message: "Invalid shipping city" });
+              profile.address.shipping.city = city;
+          }
+
+          if (pincode) {
+            if (!validator.isValidValue(pincode))
+              return res.status(400).send({ status: false, message: "Invalid shipping pincode " });
+              profile.address.shipping.pincode = pincode;
+          }
+        }
+
+        
+        if (addr.billing) {
+          const { street, city, pincode } = addr.billing;
+
+          if (street) {
+            if (!validator.isValidValue(street))
+              return res.status(400).send({ status: false, message: "Invalid billing street" });
+              profile.address.billing.street = street;
+          }
+
+          if (city) {
+            if (!validator.isValidValue(city))
+              return res.status(400).send({ status: false, message: "Invalid billing city" });
+              profile.address.billing.city = city;
+          }
+
+          if (pincode) {
+            if (!validator.isValidValue(pincode))
+              return res.status(400).send({ status: false, message: "Invalid billing pincode" });
+              profile.address.billing.pincode = pincode;
+          }
+        }
+        updatedData["address"] = profile.address;
       }
-  
-    }
-    if (address) {
-      let addr = JSON.parse(address);
-      updatedData.address={}
-
-      if (addr.shipping) {
-        let { street, city, pincode } = addr.shipping;
-        updatedData.address.shipping={}
-
-        if (street) {
-          if(!validator.isValidValue(street))
-            return res.status(400).send({status:false,message:"Invalid shipping street"})
-          updatedData["address"]["shipping"]["street"] = street
-         
-        }
-        console.log(updatedData["address"]["shipping"]["street"])
-        if (city) {
-          if(!validator.isValidValue(city))
-            return res.status(400).send({status:false,message:"Invalid shipping city"})
-          updatedData.address.shipping.city = city
-        }
-
-        if (pincode) {
-          if(!validator.isValidValue(pincode))
-            return res.status(400).send({status:false,message:"Invalid shipping street"})
-          updatedData.address.shipping.pincode = pincode
-        }
-      }
-
-      if (addr.billing) {
-        updatedData.address.billing={}
-        let { street, city, pincode } = addr.billing;
-
-        if (street) {
-          if(!validator.isValidValue(street))
-            return res.status(400).send({status:false,message:"Invalid billing street"})
-          updatedData.address.billing.street = street
-        }
-
-        if (city) {
-          if(!validator.isValidValue(city))
-            return res.status(400).send({status:false,message:"Invalid billing city"})
-          updatedData.address.billing.city = city
-        }
-
-        if (pincode) {
-          if(!validator.isValidValue(pincode))
-            return res.status(400).send({status:false,message:"Invalid billing street"})
-          updatedData.address.billing.pincode = pincode
-        }
-      }
-
     }
    
 
