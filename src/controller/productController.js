@@ -200,13 +200,13 @@ const getProductById = async (req, res) => {
 const getProductsByFilters = async (req, res) => {
   try {
     let data = req.query;
-    let { size, title, priceGreaterThan, priceLessThan, priceSort } = data;
+    let { size, name, priceGreaterThan, priceLessThan, priceSort } = data;
     const filterData = { isDeleted: false };
 
     const getFilter = Object.keys(data)
     if (getFilter.length) {
       for (let value of getFilter) {
-        if (['size', 'title', 'priceGreaterThan', 'priceLessThan', 'priceSort'].indexOf(value) == -1)
+        if (['size', 'name', 'priceGreaterThan', 'priceLessThan', 'priceSort'].indexOf(value) == -1)
           return res.status(400).send({ status: false, message: `You can't filter Using '${value}' ` })
       }
     }
@@ -242,13 +242,13 @@ const getProductsByFilters = async (req, res) => {
 
 
 
-    if (data.hasOwnProperty("title")) {
-      if (!validator.isValidValue(title)) {
+    if (data.hasOwnProperty("name")) {
+      if (!validator.isValidValue(name)) {
         return res
           .status(400)
           .send({ status: false, message: "Enter a valid title" });
       } else {
-        filterData.title = title;
+        filterData.title = name;
       }
     }
 

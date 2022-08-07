@@ -245,6 +245,8 @@ const getCart = async (req, res) => {
               status: false,
               message: "There is no cart under this user id",
             });
+
+            
     } catch (error) {
       return res.status(500).send({ status: false, message: error.message });
     }
