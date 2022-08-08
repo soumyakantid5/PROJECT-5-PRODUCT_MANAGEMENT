@@ -379,7 +379,7 @@ const updateUser = async (req, res) => {
     }
   }
 
-    if (fname) {
+    if (Object.keys(data).includes("fname")) {
       if (!validator.isValidValue(fname)) {
         return res
           .status(400)
@@ -395,7 +395,7 @@ const updateUser = async (req, res) => {
       updatedData.fname = fname;
     }
 
-    if (lname) {
+    if (Object.keys(data).includes("lname")) {
       if (!validator.isValidValue(lname)) {
         return res
           .status(400)
@@ -411,7 +411,7 @@ const updateUser = async (req, res) => {
       updatedData.lname = lname;
     }
 
-    if (email) {
+    if (Object.keys(data).includes("email")) {
       if (!validator.isValidEmail(email)) {
         return res.status(400).send({
           status: false,
@@ -426,11 +426,10 @@ const updateUser = async (req, res) => {
       }
       updatedData.email = email;
     }
-
-    if (phone) {
+    if (Object.keys(data).includes("phone")) {
       if (!validator.isValidPhone(phone)) {
         return res.status(400).send({
-          status: false,
+          status: false,             
           message: "Entered phone number is invalid or empty",
         });
       }
@@ -444,7 +443,7 @@ const updateUser = async (req, res) => {
       updatedData.phone = phone;
     }
 
-    if (password) {
+    if (Object.keys(data).includes("password")) {
       if (!validator.isValidValue(password)) {
         return res
           .status(400)
