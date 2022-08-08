@@ -132,7 +132,7 @@ const updateCart = async (req, res) => {
           return res.status(404).send({ status: false, message: "cartId does'nt exist" })
       }
 
-      const productDetails = await productModel.findOne({ _id: productId, isDeleted: false })
+      const productDetails = await productModel.findOne({ _id: productId })
 
       if (!productDetails) {
           return res.status(404).send({ status: false, message: "productId doesn't exist" })
