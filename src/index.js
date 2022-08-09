@@ -1,7 +1,7 @@
 const express=require("express");
 const mongoose=require("mongoose");
 const multer=require('multer')
-const {aws} = require('aws-sdk')
+//const aws = require('aws-sdk')
 const route=require("./route/route");
 
 const app=express();
@@ -9,11 +9,10 @@ const app=express();
 app.use(express.json())
 app.use(multer().any())
 
-mongoose.connect("mongodb+srv://sangamsuman323:XVZrnDNPfS8c21p8@cluster0.bolaw.mongodb.net/group40Database",{
-    useNewUrlParser:true
-})
+mongoose.connect("mongodb+srv://soumya-db:afdbyZgt3CyQporD@cluster0.gvqtfzu.mongodb.net/Project5_Shopping-Cart",
+                {useNewUrlParser:true})
 
-.then(()=>console.log("MongooDB Connected"))
+.then(()=>console.log("MongooDB Connected ✔✅✔"))
 .catch((error)=>console.log(error))
 
 app.use('/',route)
