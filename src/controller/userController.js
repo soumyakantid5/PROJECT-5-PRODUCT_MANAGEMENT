@@ -40,9 +40,7 @@ const registerUser = async (req, res) => {
     if (phoneExist) return res.status(400).send({ status: false, message: "Phone number already exists" });
 
     if (!validator.isValidValue(password)) {
-      return res
-        .status(400)
-        .send({ status: false, message: "password is required" });
+      return res.status(400).send({ status: false, message: "password is required" });
     }
 
     if (password.length < 8 || password.length > 15) return res.status(400).send({status: false, message: "password length should be between 8 to 15"});
@@ -155,7 +153,7 @@ let login = async (req, res) => {
     //GENERATE TOKEN
     let date = Date.now();
     let createTime = Math.floor(date / 1000);
-    let expTime = createTime + 30000;
+    let expTime = createTime + 60*60;
 
     let token = jwt.sign(
       {

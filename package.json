@@ -1,13 +1,13 @@
 {
   "name": "project5_shopping-cart",
   "version": "1.0.0",
-  "description": "",
+  "description": "Backend of Amazon like platform",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon src/index.js"
   },
-  "keywords": [],
+  "keywords": ["e-commerce","shopping-cart"],
   "author": "SOUMYA DUTTA",
   "license": "ISC",
   "dependencies": {

@@ -26,7 +26,7 @@ let {title, description, price, currencyId, currencyFormat, isFreeShipping, styl
 
     if(!isNaN(description)) return res.status(400).send({status: false, message: "Description must contain only letters"})
     
-    if (!validator.isValidNumber(price) || price < 0) return res.status(400).send({status: false,message: "price is required & its value should be more than Zero",});
+    if (!validator.isValidNumber(price) || price <= 0) return res.status(400).send({status: false,message: "price is required & its value should be more than Zero",});
     
     if (Object.keys(data).includes("currencyId")) {
       if (!validator.isValidValue(currencyId)) return res.status(400).send({ status: false, message: "currencyId is required" });
